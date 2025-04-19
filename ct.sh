@@ -23,6 +23,9 @@ if ! tmux has-session -t "$tmux_session_name" 2>/dev/null; then
 	if [ -x "$dir/inittmux.sh" ]; then
 		tmux send-keys -t "$tmux_session_name" "source ./inittmux.sh" C-m
 	fi
+	if [ -x "$dir/ligma.sh" ]; then
+		tmux send-keys -t "$tmux_session_name" "source ./ligma.sh" C-m
+	fi
 fi
 
 # Attach or switch depending on whether we're already inside tmux
