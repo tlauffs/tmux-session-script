@@ -1,7 +1,8 @@
 ## Prerequisites
-tmux 
-zoxide
-fzf 
+
+- tmux
+- zoxide
+- fzf
 
 ```
 pacman -Syu tmux zoxide fzf
