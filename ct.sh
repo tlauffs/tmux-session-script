@@ -17,16 +17,19 @@ tmux_session_name=${session_name/#./_}
 
 # If the session doesn't exist yet, create it and run init script
 if ! tmux has-session -t "$tmux_session_name" 2>/dev/null; then
-	tmux new-session -d -s "$tmux_session_name" -c "$dir"
-
-	# Run inittmux.sh if it exists and is executable
-	if [ -x "$dir/inittmux.sh" ]; then
-		tmux send-keys -t "$tmux_session_name" "source ./inittmux.sh" C-m
-	fi
-	if [ -x "$dir/ligma.sh" ]; then
-		tmux send-keys -t "$tmux_session_name" "source ./ligma.sh" C-m
+	# Prepare to run inittmux.sh if exists
+	if [ -f "$dir/inittmux.sh" ]; then
+		if [ ! -x "$dir/inittmux.sh" ]; then
+			chmod +x "$dir/inittmux.sh"
+		fi
+		# Create tmux session running inittmux.sh as the first command
+		tmux new-session -d -s "$tmux_session_name" -c "$dir" "./inittmux.sh"
+	else
+		# No init script, just start normal shell in dir
+		tmux new-session -d -s "$tmux_session_name" -c "$dir"
 	fi
 fi
+
 
 # Attach or switch depending on whether we're already inside tmux
 if [ -n "$TMUX" ]; then
